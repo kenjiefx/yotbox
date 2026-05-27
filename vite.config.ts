@@ -7,8 +7,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        popup: "index.html",
-        window: "task.html",
+        popup: "popup.html",
       },
     },
   },
