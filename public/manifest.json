@@ -13,11 +13,5 @@
       "48": "icon48.png",
       "128": "icon128.png"
     },
-    "permissions": ["storage"],
-    "content_scripts": [
-      
-    ],
-    "web_accessible_resources": [
-      
-    ]
+    "permissions": ["storage", "scripting", "activeTab"]
 }
