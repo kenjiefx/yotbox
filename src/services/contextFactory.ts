@@ -13,7 +13,7 @@ import {
  * to identify which one is the app key guid to create the YotpoDataContext
  * correctly.
  */
-function findAppKeyGuid(guids: Array<string>) {
+export function findAppKeyGuid(guids: Array<string>) {
   return guids.reduce((longestKey, currentKey) => {
     return currentKey.length > longestKey.length ? currentKey : longestKey;
   }, "") as AppKey;
