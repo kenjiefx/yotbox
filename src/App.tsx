@@ -1,7 +1,9 @@
+import Header from "./ui/layout/Header";
+
 export default function App() {
   return (
-    <div id="extension-container" className="px-4 py-4 bg-gray-100">
-      Hello world!
+    <div id="extension-container" className="bg-gray-100">
+      <Header />
     </div>
   );
 }
