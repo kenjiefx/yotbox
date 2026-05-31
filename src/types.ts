@@ -23,7 +23,8 @@ export type YotpoWidgetInstance = {
 };
 
 /**
- * A global object created by the Yotpo JavaScript
+ * A global object created by the Yotpo JavaScript with additional
+ * installation information.
  */
 export type YotpoWidgetsContainer = {
   guids: {
@@ -37,6 +38,15 @@ export type YotpoWidgetsContainer = {
     };
   };
   initWidgets: (initialize: boolean) => void;
+  installationReport: {
+    ReviewsStarRatingsWidget: {
+      installed: boolean;
+    };
+    ReviewsMainWidget: {
+      installed: boolean;
+      productId: string;
+    };
+  };
 };
 
 /**
