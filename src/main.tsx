@@ -3,14 +3,14 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import YotpoWidgetContainerProvider from "./providers/YotpoWidgetContainerProvider";
-import OpenGraphParserProvider from "./providers/OpenGraphParserProvider";
+import OpenGraphReaderProvider from "./providers/OpenGraphReaderProvider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <OpenGraphParserProvider>
+    <OpenGraphReaderProvider>
       <YotpoWidgetContainerProvider>
         <App />
       </YotpoWidgetContainerProvider>
-    </OpenGraphParserProvider>
+    </OpenGraphReaderProvider>
   </React.StrictMode>,
 );

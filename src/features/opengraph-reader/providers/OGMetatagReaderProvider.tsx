@@ -1,44 +1,56 @@
-import { ReactNode, useEffect, useState } from "react";
-import { OpenGraphParserInterface } from "../../types";
-import { OGParserContext } from "./OGParserContext";
-import { executeScriptInMainWorld } from "../../services/chrome/executeScript";
+import { useEffect, useState } from "react";
+import { OpenGraphReaderInterface } from "../../../types";
+import { OpenGraphReaderContext } from "../context";
+import { executeScriptInMainWorld } from "../../../services/chrome/executeScript";
 
-export default function MetatagOpenGraphParserProvider({
+export default function OGMetatagReaderProvider({
   children,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
 }) {
   const [openGraphData, setOpenGraphData] = useState<
-    OpenGraphParserInterface["openGraphData"] | null
+    OpenGraphReaderInterface["openGraphData"] | null
   >(null);
-
   const [openGraphError, setOpenGraphError] = useState<string | null>(null);
 
-  function transformResultToOpenGraphData(
+  function normalizeOpenGraphData(
     result: unknown,
-  ): OpenGraphParserInterface["openGraphData"] {
+  ): OpenGraphReaderInterface["openGraphData"] {
     if (!(result instanceof Object)) {
       throw new Error("Unexpected result format");
     }
     let type: string | null = null;
     let title: string | null = null;
     let description: string | null = null;
-    let siteLogo: string | null = null;
     let siteName: string | null = null;
-    if ("type" in result && typeof result.type === "string")
+    if (
+      "type" in result &&
+      typeof result.type === "string" &&
+      result.type.length > 0
+    )
       type = result.type || null;
-    if ("title" in result && typeof result.title === "string")
+    if (
+      "title" in result &&
+      typeof result.title === "string" &&
+      result.title.length > 0
+    )
       title = result.title || null;
-    if ("description" in result && typeof result.description === "string")
+    if (
+      "description" in result &&
+      typeof result.description === "string" &&
+      result.description.length > 0
+    )
       description = result.description || null;
-    if ("siteLogo" in result && typeof result.siteLogo === "string")
-      siteLogo = result.siteLogo || null;
-    if ("siteName" in result && typeof result.siteName === "string")
+    if (
+      "siteName" in result &&
+      typeof result.siteName === "string" &&
+      result.siteName.length > 0
+    )
       siteName = result.siteName || null;
-    return { type, title, description, siteLogo, siteName };
+    return { type, title, description, siteName };
   }
 
-  function queryMetaTagsFromWebpage() {
+  function readFromWebpage() {
     const metaTags = document.getElementsByTagName("meta");
     const ogData: { [key: string]: string } = {};
     for (let i = 0; i < metaTags.length; i++) {
@@ -53,37 +65,30 @@ export default function MetatagOpenGraphParserProvider({
       else if (property === "og:site_name")
         ogData.siteName = metaTags[i].getAttribute("content") || "";
     }
-    // get site logo from favicon
-    const linkTags = document.getElementsByTagName("link");
-    for (let i = 0; i < linkTags.length; i++) {
-      const rel = linkTags[i].getAttribute("rel");
-      if (rel && rel.includes("icon")) {
-        ogData.siteLogo = linkTags[i].getAttribute("href") || "";
-        break;
-      }
-    }
     return ogData;
   }
 
-  async function fetchOpenGraphData() {
+  async function readOpenGraphData() {
     try {
-      const result = await executeScriptInMainWorld(queryMetaTagsFromWebpage);
+      const result = await executeScriptInMainWorld(readFromWebpage);
       if (!(result instanceof Object)) {
         throw new Error("Unexpected result format");
       }
 
-      const parsedData = transformResultToOpenGraphData(result);
+      const parsedData = normalizeOpenGraphData(result);
       setOpenGraphData(parsedData);
     } catch (err: any) {
       setOpenGraphError(err.message || "Failed to fetch Open Graph data");
     }
   }
+
   useEffect(() => {
-    fetchOpenGraphData();
+    readOpenGraphData();
   }, []);
+
   return (
-    <OGParserContext.Provider value={{ openGraphData, openGraphError }}>
+    <OpenGraphReaderContext.Provider value={{ openGraphData, openGraphError }}>
       {children}
-    </OGParserContext.Provider>
+    </OpenGraphReaderContext.Provider>
   );
 }

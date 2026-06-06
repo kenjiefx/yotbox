@@ -1,11 +1,11 @@
 import { Fingerprint, Globe, Key, Package, Store } from "lucide-react";
 import { useState } from "react";
-import { useOpenGraphParser } from "../../features/og-parser/hooks/useOpenGraphParser";
 import SiteLogo from "../SiteLogo";
 import { useYotpoWidgetContainer } from "../../features/yotpo-widget-container/hooks/useYotpoWidgetContainer";
 import { YotpoWidgetsContainer } from "../../types";
 import { getProductIdsFromYotpoWidgetContainer } from "../../features/yotpo-widget-container/services/getProductIds";
 import { findAppKeyGuid } from "../../services/contextFactory";
+import { useOpenGraphReader } from "../../features/opengraph-reader/hooks/useOpenGraphReader";
 
 function ProductHeader({
   yotpoWidgetsContainer,
@@ -110,7 +110,7 @@ function WebsiteHeader({
 }
 
 export default function Header() {
-  const { openGraphData } = useOpenGraphParser();
+  const { openGraphData } = useOpenGraphReader();
   const { data } = useYotpoWidgetContainer();
 
   if (openGraphData === null || data === null) return null;
@@ -124,7 +124,7 @@ export default function Header() {
         title={openGraphData.title}
         description={openGraphData.description}
         siteName={openGraphData.siteName}
-        siteLogo={openGraphData.siteLogo}
+        siteLogo={null}
       />
     );
   }
@@ -134,7 +134,7 @@ export default function Header() {
       siteName={openGraphData.siteName}
       title={openGraphData.title}
       description={openGraphData.description}
-      siteLogo={openGraphData.siteLogo}
+      siteLogo={null}
     />
   );
 }

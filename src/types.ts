@@ -82,14 +82,13 @@ export interface YotpoWidgetContainerServiceInterface {
 }
 
 /**
- * An interface for a service that provides Open Graph data parsing functionality.
+ * An interface for a service that reads Open Graph data within a web page.
  */
-export interface OpenGraphParserInterface {
+export interface OpenGraphReaderInterface {
   openGraphData: {
     type: string | null;
     title: string | null;
     description: string | null;
-    siteLogo: string | null;
     siteName: string | null;
   } | null;
   openGraphError: string | null;

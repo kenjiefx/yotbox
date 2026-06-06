@@ -1,14 +1,14 @@
 import { ArrowRight, Divide, Fingerprint, IdCard, Package } from "lucide-react";
-import { useOpenGraphParser } from "../../../features/og-parser/hooks/useOpenGraphParser";
 import { useYotpoWidgetContainer } from "../../../features/yotpo-widget-container/hooks/useYotpoWidgetContainer";
 import reviewWidgetLight from "./assets/reviews-widget-light.png";
 import starRatingsLight from "./assets/star-ratings-light.png";
 import promotedProductsLight from "./assets/promoted-products-light.png";
 import reviewsCarouselLight from "./assets/reviews-carousel-light.png";
 import { createYotpoDataContext } from "../../../services/contextFactory";
+import { useOpenGraphReader } from "../../../features/opengraph-reader/hooks/useOpenGraphReader";
 
 export default function WidgetLibrary() {
-  const { openGraphData } = useOpenGraphParser();
+  const { openGraphData } = useOpenGraphReader();
   const { data } = useYotpoWidgetContainer();
 
   if (openGraphData === null || data === null) return null;
