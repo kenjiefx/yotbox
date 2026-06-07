@@ -1,6 +1,5 @@
 import { Fingerprint, Globe, Key, Package, Store } from "lucide-react";
-import { useEffect, useState } from "react";
-import SiteLogo from "../SiteLogo";
+import SiteLogo from "../primitives/SiteLogo";
 import { useYotpoWidgetContainer } from "../../features/yotpo-widget-container/hooks/useYotpoWidgetContainer";
 import { YotpoWidgetsContainer } from "../../types";
 import { useOpenGraphReader } from "../../features/opengraph-reader/hooks/useOpenGraphReader";
