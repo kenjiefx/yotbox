@@ -430,14 +430,5 @@
     "subscriptions": {},
     "logErrors": true
   },
-  "isV2ScriptInjected": true,
-  "installationReport": {
-    "ReviewsStarRatingsWidget": {
-      "installed": true
-    },
-    "ReviewsMainWidget": {
-      "installed": true,
-      "productId": "1040374262"
-    }
-  }
+  "isV2ScriptInjected": true
 }

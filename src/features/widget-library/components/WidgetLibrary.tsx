@@ -1,42 +1,45 @@
 import { ArrowRight, Divide, Fingerprint, IdCard, Package } from "lucide-react";
-import { useYotpoWidgetContainer } from "../../../features/yotpo-widget-container/hooks/useYotpoWidgetContainer";
+import { useYotpoWidgetContainer } from "../../yotpo-widget-container/hooks/useYotpoWidgetContainer";
 import reviewWidgetLight from "./assets/reviews-widget-light.png";
 import starRatingsLight from "./assets/star-ratings-light.png";
 import promotedProductsLight from "./assets/promoted-products-light.png";
 import reviewsCarouselLight from "./assets/reviews-carousel-light.png";
-import { createYotpoDataContext } from "../../../services/contextFactory";
-import { useOpenGraphReader } from "../../../features/opengraph-reader/hooks/useOpenGraphReader";
+import { useOpenGraphReader } from "../../opengraph-reader/hooks/useOpenGraphReader";
+import useWidgetLibrary from "../hooks/useWidgetLibrary";
 
 export default function WidgetLibrary() {
   const { openGraphData } = useOpenGraphReader();
-  const { data } = useYotpoWidgetContainer();
+  const { libraryData } = useWidgetLibrary();
 
-  if (openGraphData === null || data === null) return null;
+  if (openGraphData === null || libraryData === null) return null;
 
-  const widgetDataContext = createYotpoDataContext(data);
   const reviewsWidgetInstanceId = () => {
-    const reviewsWidget = widgetDataContext.widgets.find(
+    const reviewsWidget = libraryData.find(
       (widget) => widget.className === "ReviewsMainWidget",
     );
     return reviewsWidget ? reviewsWidget.widgetId : null;
   };
   const starRatingsWidgetInstanceId = () => {
-    const starRatingsWidget = widgetDataContext.widgets.find(
+    const starRatingsWidget = libraryData.find(
       (widget) => widget.className === "ReviewsStarRatingsWidget",
     );
     return starRatingsWidget ? starRatingsWidget.widgetId : null;
   };
   const promotedProductsWidgetInstanceId = () => {
-    const promotedProductsWidget = widgetDataContext.widgets.find(
+    const promotedProductsWidget = libraryData.find(
       (widget) => widget.className === "PromotedProductsWidget",
     );
     return promotedProductsWidget ? promotedProductsWidget.widgetId : null;
   };
   const reviewsCarouselWidgetInstanceId = () => {
-    const reviewsCarouselWidget = widgetDataContext.widgets.find(
+    const reviewsCarouselWidget = libraryData.find(
       (widget) => widget.className === "ReviewsCarouselWidget",
     );
     return reviewsCarouselWidget ? reviewsCarouselWidget.widgetId : null;
+  };
+  const getWidgetInstallationStatus = (className: string) => {
+    const widget = libraryData.find((widget) => widget.className === className);
+    return widget ? widget.installed : false;
   };
 
   return (
@@ -55,7 +58,7 @@ export default function WidgetLibrary() {
             <div className="flex items-center space-x-2">
               <WidgetId getWidgetIdFn={reviewsWidgetInstanceId} />
               <InstallationStatus
-                installed={data.installationReport.ReviewsMainWidget.installed}
+                installed={getWidgetInstallationStatus("ReviewsMainWidget")}
               />
             </div>
             <p className="text-[13px] text-gray-500">
@@ -83,9 +86,9 @@ export default function WidgetLibrary() {
             <div className="flex items-center space-x-2">
               <WidgetId getWidgetIdFn={starRatingsWidgetInstanceId} />
               <InstallationStatus
-                installed={
-                  data.installationReport.ReviewsStarRatingsWidget.installed
-                }
+                installed={getWidgetInstallationStatus(
+                  "ReviewsStarRatingsWidget",
+                )}
               />
             </div>
             <p className="text-[13px] text-gray-500">

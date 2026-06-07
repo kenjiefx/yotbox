@@ -13,16 +13,6 @@ export type AppKey = string & { __brand: "yotpo_appkey" };
 export type WidgetInstanceId = string & { __brand: "yotpo_widget_instance_id" };
 
 /**
- * The shape of a Yotpo widget instance within the YotpoWidgetsContainer
- */
-export type YotpoWidgetInstance = {
-  instanceId: string;
-  className: string;
-  customizations: { [key in string]: string | number | boolean };
-  staticContent: { [key in string]: string | number | boolean };
-};
-
-/**
  * A global object created by the Yotpo JavaScript with additional
  * installation information.
  */
@@ -33,20 +23,18 @@ export type YotpoWidgetsContainer = {
         data: {
           guid: string;
         };
-        widgets: { [key: WidgetInstanceId]: YotpoWidgetInstance };
+        widgets: {
+          [key: WidgetInstanceId]: {
+            instanceId: string;
+            className: string;
+            customizations: { [key in string]: string | number | boolean };
+            staticContent: { [key in string]: string | number | boolean };
+          };
+        };
       };
     };
   };
   initWidgets: (initialize: boolean) => void;
-  installationReport: {
-    ReviewsStarRatingsWidget: {
-      installed: boolean;
-    };
-    ReviewsMainWidget: {
-      installed: boolean;
-      productId: string;
-    };
-  };
 };
 
 /**
@@ -66,6 +54,30 @@ export type WidgetDataContext = {
   className: string;
   customizations: { [key in string]: string | number | boolean };
   staticContent: { [key in string]: string | number | boolean };
+  /**
+   * Tells whether the widget is installed on the page or not
+   */
+  installed: boolean;
+};
+
+export type ReviewsMainWidgetInstance = WidgetDataContext & {
+  widgetName: "ReviewsMainWidget";
+  productId: string;
+  productName: string;
+  productUrl: string;
+  productImageUrl: string;
+};
+
+export type ReviewsStarRatingsWidgetInstance = WidgetDataContext & {
+  widgetName: "ReviewsStarRatingsWidget";
+};
+
+export type PromotedProductsWidgetInstance = WidgetDataContext & {
+  widgetName: "PromotedProductsWidget";
+};
+
+export type ReviewsCarouselWidgetInstance = WidgetDataContext & {
+  widgetName: "ReviewsCarouselWidget";
 };
 
 /**
@@ -92,4 +104,14 @@ export interface OpenGraphReaderInterface {
     siteName: string | null;
   } | null;
   openGraphError: string | null;
+}
+
+export interface WidgetLibraryServiceInterface {
+  libraryData: Array<
+    | ReviewsMainWidgetInstance
+    | ReviewsStarRatingsWidgetInstance
+    | PromotedProductsWidgetInstance
+    | ReviewsCarouselWidgetInstance
+  >;
+  libraryError: string | null;
 }

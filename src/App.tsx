@@ -1,5 +1,5 @@
 import Header from "./ui/layout/Header";
-import WidgetLibrary from "./ui/main/library/WidgetLibrary";
+import WidgetLibrary from "./features/widget-library/components/WidgetLibrary";
 
 export default function App() {
   return (

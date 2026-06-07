@@ -1,11 +1,11 @@
 import { Fingerprint, Globe, Key, Package, Store } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SiteLogo from "../SiteLogo";
 import { useYotpoWidgetContainer } from "../../features/yotpo-widget-container/hooks/useYotpoWidgetContainer";
 import { YotpoWidgetsContainer } from "../../types";
-import { getProductIdsFromYotpoWidgetContainer } from "../../features/yotpo-widget-container/services/getProductIds";
-import { findAppKeyGuid } from "../../services/contextFactory";
 import { useOpenGraphReader } from "../../features/opengraph-reader/hooks/useOpenGraphReader";
+import { findAppKeyGuid } from "../../services/findAppKeyGuid";
+import useWidgetLibrary from "../../features/widget-library/hooks/useWidgetLibrary";
 
 function ProductHeader({
   yotpoWidgetsContainer,
@@ -20,9 +20,14 @@ function ProductHeader({
   siteName: string | null;
   siteLogo: string | null;
 }) {
-  const { externalId, yotpoProductId } = getProductIdsFromYotpoWidgetContainer(
-    yotpoWidgetsContainer,
-  );
+  const { libraryData } = useWidgetLibrary();
+  let externalId: string | null = null;
+  for (const widget of libraryData) {
+    if (widget.widgetName === "ReviewsMainWidget") {
+      externalId = widget.productId;
+      break;
+    }
+  }
   const appKey = findAppKeyGuid(Object.keys(yotpoWidgetsContainer.guids));
   return (
     <header className="relative overflow-hidden border-b border-indigo-100/80 bg-gradient-to-br from-indigo-50 via-white to-violet-50">
@@ -50,7 +55,7 @@ function ProductHeader({
           <div className="px-2">|</div>
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <Package className="h-4 w-4" strokeWidth={2} />
-            <span>{yotpoProductId}</span>
+            <span></span>
           </div>
         </section>
         <section className="mt-1.5 flex items-center gap-4">

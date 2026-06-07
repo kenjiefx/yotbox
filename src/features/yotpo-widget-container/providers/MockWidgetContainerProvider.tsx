@@ -1,7 +1,7 @@
 import { ReactNode, useState, useEffect } from "react";
-import { YotpoWidgetsContainer } from "../../types";
-import mockData from "./mockYotpoData.json"; // Your static file for dev
-import { YotpoWidgetContainerContext } from "./YotpoWidgetContainerContext";
+import { YotpoWidgetsContainer } from "../../../types";
+import mockData from "./data/yotpoWidgetsContainer.json";
+import { YotpoWidgetContainerContext } from "../context";
 
 export function MockWidgetContainerProvider({
   children,
@@ -14,7 +14,10 @@ export function MockWidgetContainerProvider({
   useEffect(() => {
     // Simulate a slight network delay from the static file
     const timer = setTimeout(() => {
-      // @ts-ignore - we trust our static mock data to be correct
+      /**
+       * @TODO - Probably perform validation against the mock data.
+       */
+      // @ts-ignore - we trust our static mock data to be correct for now
       setData(mockData);
       setLoading(false);
     }, 500);
@@ -23,7 +26,10 @@ export function MockWidgetContainerProvider({
 
   const refresh = async () => {
     setLoading(true);
-    // @ts-ignore - we trust our static mock data to be correct
+    /**
+     * @TODO - Probably perform validation against the mock data.
+     */
+    // @ts-ignore - we trust our static mock data to be correct for now
     setData({ ...mockData });
     setLoading(false);
   };

@@ -1,5 +1,5 @@
-import { ExtensionWidgetContainerProvider } from "../features/yotpo-widget-container/ExtensionWidgetContainerProvider";
-import { MockWidgetContainerProvider } from "../features/yotpo-widget-container/MockWidgetContainerProvider";
+import { ExtensionWidgetContainerProvider } from "../features/yotpo-widget-container/providers/ExtensionWidgetContainerProvider";
+import { MockWidgetContainerProvider } from "../features/yotpo-widget-container/providers/MockWidgetContainerProvider";
 
 export default function YotpoWidgetContainerProvider({
   children,

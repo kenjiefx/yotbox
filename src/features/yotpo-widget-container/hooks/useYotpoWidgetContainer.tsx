@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { YotpoWidgetContainerContext } from "../YotpoWidgetContainerContext";
+import { YotpoWidgetContainerContext } from "../context";
 
 export function useYotpoWidgetContainer() {
   const context = useContext(YotpoWidgetContainerContext);
