@@ -32,6 +32,10 @@ export type YotpoWidgetsContainer = {
           };
         };
       };
+      product_filters_data: {
+        externalId: string;
+        productId: string;
+      };
     };
   };
   initWidgets: (initialize: boolean) => void;

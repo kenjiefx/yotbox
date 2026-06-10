@@ -1,33 +1,70 @@
 import { Fingerprint, Globe, Key, Package, Store } from "lucide-react";
 import SiteLogo from "../primitives/SiteLogo";
 import { useYotpoWidgetContainer } from "../../features/yotpo-widget-container/hooks/useYotpoWidgetContainer";
-import { YotpoWidgetsContainer } from "../../types";
+import {
+  AppKey,
+  PromotedProductsWidgetInstance,
+  ReviewsCarouselWidgetInstance,
+  ReviewsMainWidgetInstance,
+  ReviewsStarRatingsWidgetInstance,
+  YotpoWidgetsContainer,
+} from "../../types";
 import { useOpenGraphReader } from "../../features/opengraph-reader/hooks/useOpenGraphReader";
 import { findAppKeyGuid } from "../../services/findAppKeyGuid";
 import useWidgetLibrary from "../../features/widget-library/hooks/useWidgetLibrary";
 
+/**
+ * Builds product data by cross-referencing the YotpoWidgetsContainer,
+ * Open Graph title, and widget library.
+ */
+function buildProductData(
+  yotpoWidgetsContainer: YotpoWidgetsContainer,
+  titleFromOpenGraph: string | null,
+  widgetLibrary: Array<
+    | ReviewsMainWidgetInstance
+    | ReviewsStarRatingsWidgetInstance
+    | PromotedProductsWidgetInstance
+    | ReviewsCarouselWidgetInstance
+  >,
+): {
+  externalId: string;
+  yotpoProductId: string | null;
+  productName: string;
+} | null {
+  const appKey = findAppKeyGuid(Object.keys(yotpoWidgetsContainer.guids));
+  const guidInstance = yotpoWidgetsContainer.guids[appKey];
+  let productName: string | null = null;
+  for (const widget of widgetLibrary) {
+    if (widget.widgetName === "ReviewsMainWidget") {
+      productName = widget.productName;
+      if (productName === "" && titleFromOpenGraph !== null) {
+        productName = titleFromOpenGraph;
+      }
+      return {
+        externalId: widget.productId,
+        yotpoProductId: guidInstance.product_filters_data?.productId ?? null,
+        productName: productName,
+      };
+    }
+  }
+  return null;
+}
+
 function ProductHeader({
-  yotpoWidgetsContainer,
-  title,
-  description,
+  appKey,
+  productName,
+  externalProductId,
+  yotpoInternaProductId,
   siteName,
   siteLogo,
 }: {
-  yotpoWidgetsContainer: YotpoWidgetsContainer;
-  title: string | null;
-  description: string | null;
+  appKey: AppKey;
+  productName: string;
+  externalProductId: string;
+  yotpoInternaProductId: string | null;
   siteName: string | null;
   siteLogo: string | null;
 }) {
-  const { libraryData } = useWidgetLibrary();
-  let externalId: string | null = null;
-  for (const widget of libraryData) {
-    if (widget.widgetName === "ReviewsMainWidget") {
-      externalId = widget.productId;
-      break;
-    }
-  }
-  const appKey = findAppKeyGuid(Object.keys(yotpoWidgetsContainer.guids));
   return (
     <header className="relative overflow-hidden border-b border-indigo-100/80 bg-gradient-to-br from-indigo-50 via-white to-violet-50">
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500" />
@@ -43,18 +80,18 @@ function ProductHeader({
         </div>
 
         <h1 className="line-clamp-2 text-lg font-semibold leading-snug tracking-tight text-slate-800">
-          {title ?? "Untitled product"}
+          {productName}
         </h1>
 
         <section className="mt-1 flex items-center">
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <Fingerprint className="h-4 w-4" strokeWidth={2} />
-            <span>{externalId}</span>
+            <span>{externalProductId}</span>
           </div>
           <div className="px-2">|</div>
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <Package className="h-4 w-4" strokeWidth={2} />
-            <span></span>
+            <span>{yotpoInternaProductId}</span>
           </div>
         </section>
         <section className="mt-1.5 flex items-center gap-4">
@@ -116,17 +153,17 @@ function WebsiteHeader({
 export default function Header() {
   const { openGraphData } = useOpenGraphReader();
   const { data } = useYotpoWidgetContainer();
-
+  const { libraryData } = useWidgetLibrary();
   if (openGraphData === null || data === null) return null;
-
-  const isProductPage = openGraphData.type === "product";
-
-  if (isProductPage) {
+  const productData = buildProductData(data, openGraphData.title, libraryData);
+  const appKey = findAppKeyGuid(Object.keys(data.guids));
+  if (productData !== null) {
     return (
       <ProductHeader
-        yotpoWidgetsContainer={data}
-        title={openGraphData.title}
-        description={openGraphData.description}
+        appKey={appKey}
+        externalProductId={productData.externalId}
+        productName={productData.productName}
+        yotpoInternaProductId={productData.yotpoProductId}
         siteName={openGraphData.siteName}
         siteLogo={null}
       />
