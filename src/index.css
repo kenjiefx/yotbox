@@ -25,6 +25,9 @@ body {
   height: 500px;
   overflow-y: scroll;
 }
+.extension-height {
+  height: 500px;
+}
 
 #taskapp-container {
   height: 500px;
@@ -52,6 +55,11 @@ body {
   hr {
     @apply border-t border-gray-200;
   }
+  /* Cards */
+  .card {
+    @apply border-b border-indigo-100/80 bg-gradient-to-br from-indigo-50 via-white to-violet-50
+  }
+
   /* Remove spinners in Chrome / Edge / Safari */
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
