@@ -38,7 +38,7 @@ export type YotpoWidgetsContainer = {
       };
     };
   };
-  initWidgets: (initialize: boolean) => void;
+  initWidgets: (initialize?: boolean) => void;
 };
 
 /**
@@ -95,6 +95,12 @@ export interface YotpoWidgetContainerServiceInterface {
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
+  customize: (
+    guid: string,
+    widgetId: WidgetInstanceId,
+    key: string,
+    value: string | number | boolean,
+  ) => Promise<void>;
 }
 
 /**
@@ -119,3 +125,10 @@ export interface WidgetLibraryServiceInterface {
   >;
   libraryError: string | null;
 }
+
+export type AppView =
+  | "widget_library"
+  | "editor:reviews_main_widget"
+  | "editor:reviews_star_ratings_widget"
+  | "editor:promoted_products_widget"
+  | "editor:reviews_carousel_widget";
