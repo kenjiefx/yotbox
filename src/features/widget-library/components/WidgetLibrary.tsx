@@ -6,8 +6,13 @@ import promotedProductsLight from "./assets/promoted-products-light.png";
 import reviewsCarouselLight from "./assets/reviews-carousel-light.png";
 import { useOpenGraphReader } from "../../opengraph-reader/hooks/useOpenGraphReader";
 import useWidgetLibrary from "../hooks/useWidgetLibrary";
+import { AppView } from "../../../types";
 
-export default function WidgetLibrary() {
+type WidgetLibraryProps = {
+  viewEditor: (editorView: AppView) => void;
+};
+
+export default function WidgetLibrary({ viewEditor }: WidgetLibraryProps) {
   const { openGraphData } = useOpenGraphReader();
   const { libraryData } = useWidgetLibrary();
 
@@ -65,7 +70,12 @@ export default function WidgetLibrary() {
               Yotpo's new optimized version! This widget...
             </p>
             <div className="flex items-center space-x-1 text-sm text-blue-500">
-              <span>Edit</span>
+              <span
+                onClick={() => viewEditor("editor:reviews_main_widget")}
+                className="cursor-pointer"
+              >
+                Edit
+              </span>
               <ArrowRight className="w-4 h-4" />
             </div>
           </div>
@@ -95,7 +105,12 @@ export default function WidgetLibrary() {
               Yotpo's new lightning-fast version with additional...
             </p>
             <div className="flex items-center space-x-1 text-sm text-blue-500">
-              <span>Edit</span>
+              <span
+                onClick={() => viewEditor("editor:reviews_star_ratings_widget")}
+                className="cursor-pointer"
+              >
+                Edit
+              </span>
               <ArrowRight className="w-4 h-4" />
             </div>
           </div>
@@ -122,7 +137,12 @@ export default function WidgetLibrary() {
               Showcase your most popular products above your...
             </p>
             <div className="flex items-center space-x-1 text-sm text-blue-500">
-              <span>Edit</span>
+              <span
+                onClick={() => viewEditor("editor:promoted_products_widget")}
+                className="cursor-pointer"
+              >
+                Edit
+              </span>
               <ArrowRight className="w-4 h-4" />
             </div>
           </div>
@@ -152,7 +172,12 @@ export default function WidgetLibrary() {
               Increase review visibility by showcasing your top...
             </p>
             <div className="flex items-center space-x-1 text-sm text-blue-500">
-              <span>Edit</span>
+              <span
+                onClick={() => viewEditor("editor:reviews_carousel_widget")}
+                className="cursor-pointer"
+              >
+                Edit
+              </span>
               <ArrowRight className="w-4 h-4" />
             </div>
           </div>
